@@ -221,5 +221,46 @@ var saveTasks = function () {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
+var loadTasks = function () {
+    //Gets task items from localStorage.
+    var savedTasks = localStorage.getItem("tasks");
+    if (!savedTasks) {
+        return false;
+    }
+    //Converts tasks from the string format back into an array of objects.
+    savedTasks = JSON.parse(savedTasks);
+    //Iterates through a tasks array and creates task elements on the page from it.
+    for (var i = 0; i < savedTasks.length; i++) {
+        console.log(savedTasks[i]);
+        savedTasks[i].id = taskIdCounter;
+        var listItemEl = document.createElement("li");
+        listItemEl.className = "task-item";
+        listItemEl.setAttribute("data-task-id", tasks[i].id);
+        var taskInfoEl = document.createElement("div");
+        taskInfoEl.className = "task-info";
+        taskInfoEl.innerHTML = "<h3 class='task-name'>" + tasks[i].name + "</h3><span class='task-type'>" + tasks[i].type + "</span>";
+        listItemEl.appendChild(taskInfoEl);
+        var taskActionsEl = createTaskActions(tasks[i].id);
+        listItemEl.appendChild(taskActionsEl);
+        console.log(listItemEl);
+        if (tasks[i].status === "to do") {
+            listItemEl.querySelector("select[name='status-change']").selectedIndex;
+            selectedIndex = 0;
+            listItemEl.appendChild(tasksToDoEl);
+        } else if (tasks[i].status === "in progress") {
+            listItemEl.querySelector("select[name='status-change']").selectedIndex;
+            selectedIndex = 1;
+            listItemEl.appendChild(tasksInProgressEl);
+        } else if (tasks[i].status === "complete") {
+            listItemEl.querySelector("select[name='status-change']").selectedIndex;
+            selectedIndex = 2;
+            listItemEl.appendChild(tasksCompletedEl);
+        }
+        taskIdCounter += 1;
+        console.log(listItemEl);
+    }
+};
+
 pageContentEl.addEventListener("click", taskButtonHandler);
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
+loadTasks();
